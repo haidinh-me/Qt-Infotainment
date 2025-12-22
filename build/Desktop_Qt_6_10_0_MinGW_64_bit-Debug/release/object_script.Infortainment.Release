@@ -1,0 +1,13 @@
+release/CAN_Message.o
+release/cancontroller.o
+release/audiovolum.o
+release/hvachandler.o
+release/inforbarclass.o
+release/system.o
+release/main.o
+release/qrc_qml.o
+release/moc_cancontroller.o
+release/moc_audiovolum.o
+release/moc_hvachandler.o
+release/moc_inforbarclass.o
+release/moc_system.o
