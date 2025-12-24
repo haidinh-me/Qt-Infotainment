@@ -83,6 +83,46 @@ cancontroller::cancontroller(System *system_,
 
     UDP_Protocol();
 }
+
+cancontroller:: ~cancontroller()
+{
+    delete temp_inside;
+    delete auto_signal;
+    delete volume_level;
+    delete havc_passenger;
+    delete havc_driver;
+    delete checksum_havc;
+    delete havcMsg;
+
+    delete temp_enviroment;
+    delete check_engine;
+    delete rpm_engine;
+    delete car_speed;
+    delete lock;
+    delete temp_engine;
+    delete fuel_level;
+    delete checksum_sysinfor;
+    delete sysInforMsg;
+
+    delete gear_d;
+    delete gear_n;
+    delete gear_r;
+    delete gear_p;
+    delete checksum_gearbox;
+    delete gearboxMsg;
+
+    delete fog_light;
+    delete hazard;
+    delete low_beam;
+    delete hight_beam;
+    delete turn_right;
+    delete turn_left;
+    delete checksum_indicator;
+    delete indicatorMsg;
+
+    qDebug() << "Released all CAN memory!";
+}
+
 void cancontroller::onFrameReceived()
 {
     while (device->framesAvailable()) {

@@ -16,16 +16,16 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
-    System *m_systemHandler = new System;
-    HVACHandler *m_driverHandler = new HVACHandler;
-    HVACHandler *m_passengerHandler = new HVACHandler;
-    AudioVolum  *m_audioVolumHandler = new AudioVolum;
-    InforBarClass *m_inforBarHandler = new InforBarClass;
-    cancontroller *m_cancontroller = new cancontroller(m_systemHandler,
-                                                       m_driverHandler,
-                                                       m_passengerHandler,
-                                                       m_audioVolumHandler,
-                                                       m_inforBarHandler);
+    System m_systemHandler;
+    HVACHandler m_driverHandler;
+    HVACHandler m_passengerHandler;
+    AudioVolum  m_audioVolumHandler;
+    InforBarClass m_inforBarHandler;
+    cancontroller m_cancontroller(&m_systemHandler,
+                                  &m_driverHandler,
+                                  &m_passengerHandler,
+                                  &m_audioVolumHandler,
+                                  &m_inforBarHandler);
 
 
     QQmlApplicationEngine engine;
@@ -41,12 +41,12 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
 
     QQmlContext * context = engine.rootContext();
-    context->setContextProperty("systemHandler", m_systemHandler);
-    context->setContextProperty("driverHVACHandler", m_driverHandler);
-    context->setContextProperty("passengerHVACHandler", m_passengerHandler);
-    context->setContextProperty("volumLevelHandler", m_audioVolumHandler);
-    context->setContextProperty("inforBarHandler", m_inforBarHandler);
-    context->setContextProperty("canControllerHandler", m_cancontroller);
+    context->setContextProperty("systemHandler", &m_systemHandler);
+    context->setContextProperty("driverHVACHandler", &m_driverHandler);
+    context->setContextProperty("passengerHVACHandler", &m_passengerHandler);
+    context->setContextProperty("volumLevelHandler", &m_audioVolumHandler);
+    context->setContextProperty("inforBarHandler", &m_inforBarHandler);
+    context->setContextProperty("canControllerHandler", &m_cancontroller);
 
     engine.load(url);
 

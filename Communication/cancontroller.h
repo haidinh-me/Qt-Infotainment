@@ -28,6 +28,9 @@ public:
                            AudioVolum *audio_,
                            InforBarClass *inforbar_,
                            QObject *parent = nullptr);
+
+    ~cancontroller();
+
     void UDP_Protocol();
     void print_signal(uint8_t *buff, CAN_Message *msg);
 
