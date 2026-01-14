@@ -11,7 +11,11 @@
 #include <QDebug>
 
 #include "CAN_Message.h"
-
+#include "Controllers/system.h"
+#include "Controllers/hvachandler.h"
+#include "Controllers/audiovolum.h"
+#include "Controllers/inforbarclass.h"
+#include "Communication/cancontroller.h"
 #include <Controllers/system.h>
 #include <Controllers/hvachandler.h>
 #include <Controllers/audiovolum.h>
