@@ -40,5 +40,8 @@
         <file>ui/LeftScreen/LeftScreen.qml</file>
         <file>ui/RightScreen/NavigationSearch.qml</file>
         <file>ui/RightScreen/RightScreen.qml</file>
+        <file>fonts/arial.ttf</file>
+        <file>fonts/tahoma.ttf</file>
+        <file>fonts/tahomabd.ttf</file>
     </qresource>
 </RCC>

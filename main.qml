@@ -12,6 +12,7 @@ Window {
     visible: true
     title: qsTr("Infortainment")
 
+    //visibility: Window.FullScreen
     //flags: Qt.FramelessWindowHint
 
     RightScreen{

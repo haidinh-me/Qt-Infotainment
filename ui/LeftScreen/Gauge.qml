@@ -28,6 +28,16 @@ Item{
             kimGauge.requestPaint()
     }
 
+    FontLoader{
+        id: tahomaFont
+        source: "qrc:/fonts/tahoma.ttf"
+    }
+
+    FontLoader{
+        id: arialFont
+        source: "qrc:/fonts/arial.ttf"
+    }
+
     Canvas {
         id: bgCanvas
         anchors.fill: parent
@@ -108,7 +118,7 @@ Item{
         cct.stroke()
 
         cct.fillStyle = "black"
-        cct.font = "bold "+ (parent.width * .085).toString()+"px" + " Tahoma"
+        cct.font = "bold "+ (parent.width * .085).toString()+"px" + " tahomaFont"
         cct.textAlign = "center"
         cct.textBaseline = "middle"
         cct.fillText(target.toString() + (oType == "METER" ? " Km/h" : " RPM" ) ,
@@ -188,7 +198,7 @@ Item{
                 var tx = centerX + Math.cos(angle)*(radius-parent.width * .09)
                 var ty = centerY + Math.sin(angle)*(radius-parent.width * .09)
                 ctx.fillStyle = (i >= (oType == "METER" ? 200 : 8000 ) ? "red" : "black")
-                ctx.font = "bold "+  (parent.width * .06).toString() +"px"  +" Tahoma"
+                ctx.font = "bold "+  (parent.width * .06).toString() +"px"  +" tahomaFont"
                 ctx.textAlign = "center"
                 ctx.textBaseline = "middle"
                 ctx.fillText((oType == "METER" ? i.toString() : (i/100).toString() )
@@ -196,10 +206,10 @@ Item{
             }
             if(oType == "RPM") {
                 ctx.fillStyle = "black"
-                ctx.font = "bold "+ (parent.width * .08).toString() +"px" +" Arial"
+                ctx.font = "bold "+ (parent.width * 0.08).toString() +"px" +" arialFont"
                 ctx.textAlign = "center"
                 ctx.textBaseline = "middle"
-                ctx.fillText("x100", centerX, centerY + 30 )
+                ctx.fillText("x100", centerX, centerY + parent.width * .15 )
             }
         }
     }
