@@ -28,14 +28,24 @@ Item{
             kimGauge.requestPaint()
     }
 
-    FontLoader{
-        id: tahomaFont
-        source: "qrc:/fonts/tahoma.ttf"
-    }
+    FontLoader {
+            id: tahomaFont
+            source: "qrc:/fonts/tahomabd.ttf"
+            onStatusChanged: {
+                if (status == FontLoader.Ready) {
+                    bgCanvas.requestPaint();
+                }
+            }
+        }
 
     FontLoader{
         id: arialFont
-        source: "qrc:/fonts/arial.ttf"
+        source: "qrc:/fonts/arialbd.ttf"
+        onStatusChanged: {
+            if (status == FontLoader.Ready) {
+                bgCanvas.requestPaint();
+            }
+        }
     }
 
     Canvas {
@@ -47,7 +57,7 @@ Item{
         property int innerSegments: (oType == "METER" ? 12 : 10 )
         property real innerGapRatio: 0.15
         property real innerOuterOffset: 0.15
-        property real innerThickness: 20
+        property real innerThickness: parent.width * .095
 
         onPaint: {
             var ctx = getContext("2d")
@@ -118,7 +128,7 @@ Item{
         cct.stroke()
 
         cct.fillStyle = "black"
-        cct.font = "bold "+ (parent.width * .085).toString()+"px" + " tahomaFont"
+        cct.font = `bold ${parent.width * 0.085}px ${tahomaFont.name}`;
         cct.textAlign = "center"
         cct.textBaseline = "middle"
         cct.fillText(target.toString() + (oType == "METER" ? " Km/h" : " RPM" ) ,
@@ -198,7 +208,7 @@ Item{
                 var tx = centerX + Math.cos(angle)*(radius-parent.width * .09)
                 var ty = centerY + Math.sin(angle)*(radius-parent.width * .09)
                 ctx.fillStyle = (i >= (oType == "METER" ? 200 : 8000 ) ? "red" : "black")
-                ctx.font = "bold "+  (parent.width * .06).toString() +"px"  +" tahomaFont"
+                ctx.font = `bold ${parent.width * 0.06}px ${tahomaFont.name}`;
                 ctx.textAlign = "center"
                 ctx.textBaseline = "middle"
                 ctx.fillText((oType == "METER" ? i.toString() : (i/100).toString() )
@@ -206,7 +216,7 @@ Item{
             }
             if(oType == "RPM") {
                 ctx.fillStyle = "black"
-                ctx.font = "bold "+ (parent.width * 0.08).toString() +"px" +" arialFont"
+                ctx.font = `bold ${parent.width * 0.07}px ${arialFont.name}`;
                 ctx.textAlign = "center"
                 ctx.textBaseline = "middle"
                 ctx.fillText("x100", centerX, centerY + parent.width * .15 )

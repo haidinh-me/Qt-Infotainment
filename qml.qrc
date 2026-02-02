@@ -43,5 +43,6 @@
         <file>fonts/arial.ttf</file>
         <file>fonts/tahoma.ttf</file>
         <file>fonts/tahomabd.ttf</file>
+        <file>fonts/arialbd.ttf</file>
     </qresource>
 </RCC>
