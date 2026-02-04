@@ -24,6 +24,12 @@ Item{
         }
     }*/
 
+    Component.onCompleted: {
+        bgCanvas.requestPaint()
+        gaugeCanvas.requestPaint()
+        kimGauge.requestPaint()
+    }
+
     onTargetChanged: {
             kimGauge.requestPaint()
     }
@@ -34,6 +40,7 @@ Item{
             onStatusChanged: {
                 if (status == FontLoader.Ready) {
                     bgCanvas.requestPaint();
+                    gaugeCanvas.requestPaint();
                 }
             }
         }
@@ -44,12 +51,15 @@ Item{
         onStatusChanged: {
             if (status == FontLoader.Ready) {
                 bgCanvas.requestPaint();
+                gaugeCanvas.requestPaint();
             }
         }
     }
 
     Canvas {
         id: bgCanvas
+        onWidthChanged: requestPaint()
+        onHeightChanged: requestPaint()
         anchors.fill: parent
 
         property var startAngle: (oType == "METER" ? Math.PI*5/6 : -Math.PI*1/6 )
@@ -110,6 +120,10 @@ Item{
         id:kimGauge
         width: parent.width
         height: parent.height
+
+        onWidthChanged: requestPaint()
+        onHeightChanged: requestPaint()
+
         // ---- VẼ KIM ----
         onPaint:{
         //console.log(width)
@@ -164,6 +178,9 @@ Item{
         id: gaugeCanvas
         width: parent.width
         height: parent.height
+
+        onWidthChanged: requestPaint()
+        onHeightChanged: requestPaint()
 
         onPaint: {
             var ctx = getContext("2d")

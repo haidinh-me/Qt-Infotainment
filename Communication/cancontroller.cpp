@@ -81,7 +81,8 @@ cancontroller::cancontroller(System *system_,
     };
     indicatorMsg = new CAN_Message(1092, 5, indicatorSignals);
 
-    UDP_Protocol();
+    onFrameReceived();
+    //UDP_Protocol();
 }
 
 cancontroller:: ~cancontroller()
@@ -125,9 +126,41 @@ cancontroller:: ~cancontroller()
 
 void cancontroller::onFrameReceived()
 {
-    while (device->framesAvailable()) {
-        QCanBusFrame frame = device->readFrame();
-        emit frameReceived(frame.frameId(), frame.payload());
+    if (!QCanBus::instance()->plugins().contains(QStringLiteral("socketcan"))) {
+        qDebug() << "Failed: plugin socketcan not found!";
+        return;
+    }
+
+    QString errorString;
+    m_device = QCanBus::instance()->createDevice(
+        QStringLiteral("socketcan"), QStringLiteral("can0"), &errorString);
+
+    if (!m_device) {
+        qDebug() << "Initialize device failed :" << errorString;
+        return;
+    }
+
+    QObject::connect(m_device, &QCanBusDevice::framesReceived, this, [this]() {
+        while (m_device->framesAvailable()) {
+            const QCanBusFrame frame = m_device->readFrame();
+
+            quint32 canID;
+            uint8_t buffer[8];
+
+            canID = frame.frameId();
+
+            QByteArray payload = frame.payload();
+            int len = qMin(payload.size(), 8);
+            memcpy(buffer, payload.constData(), len);
+
+            DataHandle(canID, buffer);
+        }
+    });
+
+    if (m_device->connectDevice()) {
+        qDebug() << "Connect succesfully to can0!";
+    } else {
+        qDebug() << "Connect failed: " << m_device->errorString();
     }
 }
 void cancontroller::UDP_Protocol()
@@ -154,47 +187,53 @@ void cancontroller::UDP_Protocol()
             for(int i = 0 ;i < data.size() - 4; i ++)
                 buff[i] = static_cast<quint8>(data[i + 4]);
 
-            if(canId == 1110)
-            {//havc
-            }
-            else if(canId == 1109)
-            {
-                print_signal(buff, sysInforMsg);
-
-                sysInfor_->setOutdoorTemp(static_cast<int32_t>(temp_enviroment->physValue));
-                inforBar_->setIndicator(static_cast<bool>(check_engine->physValue));
-                sysInfor_->setRpmEngine(static_cast<uint32_t>(rpm_engine->physValue));
-                sysInfor_->setCarspeed(static_cast<uint32_t>(car_speed->physValue));
-                if(sysInfor_->carspeed() > 60) sysInfor_->setCarLocked(true);
-                else sysInfor_->setCarLocked(static_cast<bool>(lock->physValue));
-
-                sysInfor_->setCoolant(static_cast<int32_t>(temp_engine->physValue));
-                if(sysInfor_->coolant() >= 75) inforBar_->setTemperature( true );
-
-                sysInfor_->setFuellevel(static_cast<uint32_t>(fuel_level->physValue));
-            }
-            else if(canId == 1108)
-            {
-                print_signal(buff, gearboxMsg);
-
-                inforBar_->setPaking(static_cast<bool>(gear_p->physValue));
-                inforBar_->setGearR(static_cast<bool>(gear_r->physValue));
-                inforBar_->setGearN(static_cast<bool>(gear_n->physValue));
-                inforBar_->setGearD(static_cast<bool>(gear_d->physValue));
-            }
-            else if(canId == 1092)
-            {
-                print_signal(buff, indicatorMsg);
-
-                inforBar_->setLightSm(static_cast<bool>(fog_light->physValue));
-                inforBar_->setHazard(static_cast<bool>(hazard->physValue));
-                inforBar_->setLightPhare(static_cast<bool>(low_beam->physValue));
-                inforBar_->setLightCos(static_cast<bool>(hight_beam->physValue));
-                inforBar_->setRightSignal(static_cast<bool>(turn_right->physValue));
-                inforBar_->setLeftSignal(static_cast<bool>(turn_left->physValue));
-            }
+            DataHandle(canId, buff);
         }
     });
+}
+
+void cancontroller::DataHandle(quint32 &canId, uint8_t *buff)
+{
+    if(canId == 1110)
+    {//hvac
+    }
+    else if(canId == 1109)
+    {
+        print_signal(buff, sysInforMsg);
+
+        sysInfor_->setOutdoorTemp(static_cast<int32_t>(temp_enviroment->physValue));
+        inforBar_->setIndicator(static_cast<bool>(check_engine->physValue));
+        sysInfor_->setRpmEngine(static_cast<uint32_t>(rpm_engine->physValue));
+        sysInfor_->setCarspeed(static_cast<uint32_t>(car_speed->physValue));
+        if(sysInfor_->carspeed() > 60) sysInfor_->setCarLocked(true);
+        else sysInfor_->setCarLocked(static_cast<bool>(lock->physValue));
+
+        sysInfor_->setCoolant(static_cast<int32_t>(temp_engine->physValue));
+        if(sysInfor_->coolant() >= 75) inforBar_->setTemperature( true );
+        else inforBar_->setTemperature(false);
+
+        sysInfor_->setFuellevel(static_cast<uint32_t>(fuel_level->physValue));
+    }
+    else if(canId == 1108)
+    {
+        print_signal(buff, gearboxMsg);
+
+        inforBar_->setPaking(static_cast<bool>(gear_p->physValue));
+        inforBar_->setGearR(static_cast<bool>(gear_r->physValue));
+        inforBar_->setGearN(static_cast<bool>(gear_n->physValue));
+        inforBar_->setGearD(static_cast<bool>(gear_d->physValue));
+    }
+    else if(canId == 1092)
+    {
+        print_signal(buff, indicatorMsg);
+
+        inforBar_->setLightSm(static_cast<bool>(fog_light->physValue));
+        inforBar_->setHazard(static_cast<bool>(hazard->physValue));
+        inforBar_->setLightPhare(static_cast<bool>(low_beam->physValue));
+        inforBar_->setLightCos(static_cast<bool>(hight_beam->physValue));
+        inforBar_->setRightSignal(static_cast<bool>(turn_right->physValue));
+        inforBar_->setLeftSignal(static_cast<bool>(turn_left->physValue));
+    }
 }
 
 void cancontroller::print_signal(uint8_t *buff, CAN_Message *msg)

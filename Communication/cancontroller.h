@@ -22,6 +22,8 @@
 #include <Controllers/inforbarclass.h>
 #include <Communication/cancontroller.h>
 
+#include <cstring>
+
 class cancontroller : public QObject
 {
     Q_OBJECT
@@ -36,6 +38,8 @@ public:
     ~cancontroller();
 
     void UDP_Protocol();
+    void onFrameReceived();
+
     void print_signal(uint8_t *buff, CAN_Message *msg);
 
     quint8 getID() const {return canId;}
@@ -46,6 +50,8 @@ public:
 
     quint8* getDATA() {return buff;}
 
+    void DataHandle(quint32 &canId, uint8_t *buff);
+
     Q_INVOKABLE bool sentTempDriver(int val);
 
     Q_INVOKABLE bool sentTempPassenger(int val);
@@ -54,10 +60,8 @@ public:
 
 
 signals:
-    void frameReceived(uint id, QByteArray data);
 
 private slots:
-    void onFrameReceived();
 
 private:
     CanSignal*  temp_inside;
@@ -105,7 +109,7 @@ private:
     AudioVolum  * audioVolum_{};
     InforBarClass * inforBar_{};
 
-    QCanBusDevice *device;
+    QCanBusDevice * m_device;
     QUdpSocket *udpSocket;
 
 };

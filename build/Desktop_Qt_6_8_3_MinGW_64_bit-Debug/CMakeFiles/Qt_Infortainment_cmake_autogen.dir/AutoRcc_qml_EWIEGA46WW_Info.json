@@ -48,7 +48,11 @@
 		"F:/Document/Qt Practical/Qt_Infortainment_cmake/ui/assets/car-temperature_on.png",
 		"F:/Document/Qt Practical/Qt_Infortainment_cmake/ui/assets/car-light-cos_on.png",
 		"F:/Document/Qt Practical/Qt_Infortainment_cmake/ui/assets/car-light-sm_on.png",
-		"F:/Document/Qt Practical/Qt_Infortainment_cmake/ui/assets/car-indicator_on.png"
+		"F:/Document/Qt Practical/Qt_Infortainment_cmake/ui/assets/car-indicator_on.png",
+		"F:/Document/Qt Practical/Qt_Infortainment_cmake/fonts/arialbd.ttf",
+		"F:/Document/Qt Practical/Qt_Infortainment_cmake/fonts/tahomabd.ttf",
+		"F:/Document/Qt Practical/Qt_Infortainment_cmake/fonts/arial.ttf",
+		"F:/Document/Qt Practical/Qt_Infortainment_cmake/fonts/tahoma.ttf"
 	],
 	"LOCK_FILE" : "F:/Document/Qt Practical/Qt_Infortainment_cmake/build/Desktop_Qt_6_8_3_MinGW_64_bit-Debug/CMakeFiles/Qt_Infortainment_cmake_autogen.dir/AutoRcc_qml_EWIEGA46WW_Lock.lock",
 	"MULTI_CONFIG" : false,
